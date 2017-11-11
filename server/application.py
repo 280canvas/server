@@ -1,4 +1,5 @@
 import asyncio
+import http
 import json
 import os
 import websockets
@@ -21,9 +22,17 @@ client = PeonyClient(consumer_key=CONSUMER_KEY,
                      access_token_secret=ACCESS_SECRET,
                      )
 
-async def time(websocket, path):
+req = client.stream.statuses.filter.post(track=TRACKING_STRING)
 
-    req = client.stream.statuses.filter.post(track=TRACKING_STRING)
+
+class HttpWSSProtocol(websockets.WebSocketServerProtocol):
+    async def process_request(self, path, request_headers):
+        if path == '/':
+            return http.HTTPStatus(http.HTTPStatus.OK)
+
+
+async def time(websocket, path):
+    print('websocketing')
 
     # req is an asynchronous context
     async with req as stream:
@@ -42,7 +51,7 @@ async def time(websocket, path):
                 })
                 await websocket.send(msg)
 
-start_server = websockets.serve(time, '127.0.0.1', os.environ.get('PORT', 5577))
+start_server = websockets.serve(time, '127.0.0.1', os.environ.get('PORT', 5577), klass=HttpWSSProtocol)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
