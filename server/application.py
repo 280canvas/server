@@ -42,7 +42,7 @@ async def time(websocket, path):
                 })
                 await websocket.send(msg)
 
-start_server = websockets.serve(time, '127.0.0.1', 5678)
+start_server = websockets.serve(time, '127.0.0.1', os.environ.get('PORT', 5577))
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
