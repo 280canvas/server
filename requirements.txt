@@ -1,0 +1,4 @@
+asyncio
+websockets
+tweepy
+peony-twitter[all]
