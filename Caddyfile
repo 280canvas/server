@@ -1,4 +1,4 @@
-platform.280canvas
+platform.280canvas.com
 gzip
 proxy /stream localhost:5577 {
 	websocket
