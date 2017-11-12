@@ -62,6 +62,7 @@ function handleProgramInput(programText, user) {
 const stream = T.stream('statuses/filter', { track: '#280canvas' });
 
 stream.on('tweet', tweet => {
+  console.log('has a tweet!', tweet);
   handleProgramInput(tweet.text, {
     screenName: tweet.user.screen_name,
     name: tweet.user.name,
@@ -72,13 +73,15 @@ stream.on('tweet', tweet => {
         console.log('No success!');
         T.post('statuses/update', { status: `@${tweet.user.screen_name} We couldn't compile your rend script! 😔` });
       }
+
     })
     .catch(error => {
+      console.log('error via parser!');
       T.post('statuses/update', { status: `@${tweet.user.screen_name} We couldn't compile your rend script! 😔` });
     });
 });
 
-setInterval(() => broadcast('heartbeat'), 1000);
+// setInterval(() => broadcast('heartbeat'), 1000);
 
 
 app.post('/draw', (req, res) => {
