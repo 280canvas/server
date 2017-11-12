@@ -22,6 +22,7 @@ const wss = new WebSocket.Server({ server });
 
 
 function broadcast(message) {
+  console.log('BROADCASTING! ', message);
   wss.clients.forEach(function each(client) {
     if (client.readyState === WebSocket.OPEN) {
       client.send(message);
