@@ -6,6 +6,9 @@
   "author": "James Canning <james@brudil.com>",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "node-fetch": "^2.0.0-alpha.9",
     "twit": "^2.2.9",
     "ws": "^3.3.1"
   }

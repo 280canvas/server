@@ -1,5 +1,9 @@
+const http = require('http');
+const bodyParser = require('body-parser');
 const Twit = require('twit');
 const WebSocket = require('ws');
+const express = require('express');
+const fetch = require('node-fetch');
 
 const T = new Twit({
   consumer_key:         process.env.CONSUMER_KEY,
@@ -9,7 +13,10 @@ const T = new Twit({
   timeout_ms:           60*1000,
 });
 
-const wss = new WebSocket.Server({ port: 5577 });
+const app = express();
+app.use(bodyParser.json());
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
 
 
 function broadcast(message) {
@@ -20,11 +27,74 @@ function broadcast(message) {
   });
 }
 
+function hasProgram(program) {
+  return program.statements.length > 0;
+}
+
+function handleProgramInput(programText, user) {
+  return fetch('http://localhost:6789/parse', {
+    method: 'POST',
+    body: JSON.stringify({
+      programText
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+    .then(data => (Promise.all([data, data.json()])))
+    .then(back => {
+      const [response, data] = back;
+
+      if (response.status === 200 && hasProgram(data.program)) {
+        broadcast(JSON.stringify({
+          user,
+          program: data.program
+        }));
+        console.log('success!');
+        return { success: true };
+      } else {
+        console.log('fail!');
+        return { success: false };
+      }
+    });
+}
+
 const stream = T.stream('statuses/filter', { track: '#280canvas' });
 
 stream.on('tweet', tweet => {
-  // fetch parsed program
-  // then
-  broadcast(JSON.stringify(tweet))
+  handleProgramInput(tweet.text, {
+    screenName: tweet.user.screen_name,
+    name: tweet.user.name,
+    profileImage: tweet.user.profile_image_url_https,
+  })
+    .then((response) => {
+      if (!response.success) {
+        console.log('No success!');
+        T.post('statuses/update', { status: `@${tweet.user.screen_name} We couldn't compile your rend script! 😔` });
+      }
+    })
+    .catch(error => {
+      T.post('statuses/update', { status: `@${tweet.user.screen_name} We couldn't compile your rend script! 😔` });
+    });
 });
 
+
+app.post('/draw', (req, res) => {
+  handleProgramInput(req.body.programText, {
+    screenName: 'cliUser',
+    name: 'cli user',
+    profileImage: null,
+  })
+    .then((response) => {
+      if (response.success) {
+        res.sendStatus(200);
+      } else {
+        res.sendStatus(400);
+      }
+    })
+    .catch(() => res.sendStatus(400))
+});
+
+server.listen(5577, function listening() {
+  console.log('Listening on %d', server.address().port);
+});

@@ -1,4 +1,4 @@
-localhost:8000
+platform.280canvas
 gzip
 proxy /stream localhost:5577 {
 	websocket
