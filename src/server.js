@@ -78,6 +78,8 @@ stream.on('tweet', tweet => {
     });
 });
 
+setInterval(() => broadcast('heartbeat'), 1000);
+
 
 app.post('/draw', (req, res) => {
   handleProgramInput(req.body.programText, {
