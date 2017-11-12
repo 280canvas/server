@@ -32,7 +32,6 @@ function broadcast(message) {
 
 function hasProgram(program) {
   console.log(program);
-  console.log({ hasProgram: program.statements.length > 0 });
   return program.statements.length > 0;
 }
 
@@ -49,7 +48,7 @@ function handleProgramInput(programText, user) {
     .then(data => (Promise.all([data, data.json()])))
     .then(back => {
       const [response, data] = back;
-
+      console.log(data);
       if (response.status === 200 && hasProgram(data.program)) {
         broadcast(JSON.stringify({
           user,
@@ -67,7 +66,7 @@ function handleProgramInput(programText, user) {
 const stream = T.stream('statuses/filter', { track: '#280canvas' });
 
 stream.on('tweet', tweet => {
-  console.log('has a tweet!', tweet);
+  console.log('has a tweet!');
   handleProgramInput(tweet.text, {
     screenName: tweet.user.screen_name,
     name: tweet.user.name,
