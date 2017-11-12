@@ -49,7 +49,7 @@ function handleProgramInput(programText, user) {
     .then(back => {
       const [response, data] = back;
       console.log(data);
-      if (response.status === 200 && hasProgram(data.program)) {
+      if (response.status === 200 && hasProgram(JSON.parse(data.program))) {
         broadcast(JSON.stringify({
           user,
           program: data.program
