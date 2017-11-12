@@ -31,6 +31,8 @@ function broadcast(message) {
 }
 
 function hasProgram(program) {
+  console.log(program);
+  console.log({ hasProgram: program.statements.length > 0 });
   return program.statements.length > 0;
 }
 
