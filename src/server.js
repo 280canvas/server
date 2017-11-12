@@ -84,23 +84,23 @@ stream.on('tweet', tweet => {
 });
 
 // setInterval(() => broadcast('heartbeat'), 1000);
-
-
-app.post('/draw', (req, res) => {
-  handleProgramInput(req.body.programText, {
-    screenName: 'cliUser',
-    name: 'cli user',
-    profileImage: null,
-  })
-    .then((response) => {
-      if (response.success) {
-        res.sendStatus(200);
-      } else {
-        res.sendStatus(400);
-      }
-    })
-    .catch(() => res.sendStatus(400))
-});
+//
+//
+// app.post('/draw', (req, res) => {
+//   handleProgramInput(req.body.programText, {
+//     screenName: 'cliUser',
+//     name: 'cli user',
+//     profileImage: null,
+//   })
+//     .then((response) => {
+//       if (response.success) {
+//         res.sendStatus(200);
+//       } else {
+//         res.sendStatus(400);
+//       }
+//     })
+//     .catch(() => res.sendStatus(400))
+// });
 
 server.listen(5577, function listening() {
   console.log('Listening on %d', server.address().port);
