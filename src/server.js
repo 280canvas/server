@@ -79,6 +79,7 @@ stream.on('tweet', tweet => {
 
     })
     .catch(error => {
+      console.log(error);
       console.log('error via parser!');
       T.post('statuses/update', { status: `@${tweet.user.screen_name} We couldn't compile your rend script! 😔` });
     });
