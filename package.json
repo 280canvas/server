@@ -1,0 +1,12 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:280canvas/server.git",
+  "author": "James Canning <james@brudil.com>",
+  "license": "MIT",
+  "dependencies": {
+    "twit": "^2.2.9",
+    "ws": "^3.3.1"
+  }
+}
