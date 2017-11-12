@@ -13,6 +13,8 @@ const T = new Twit({
   timeout_ms:           60*1000,
 });
 
+console.log(process.env);
+
 const app = express();
 app.use(bodyParser.json());
 const server = http.createServer(app);
